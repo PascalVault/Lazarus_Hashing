@@ -30,6 +30,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    function Count: Integer;
+    function GetName(Index: Integer): String;
     function FindClass(Name: String; out AClass: THasherClass): Boolean;
     procedure RegisterHasher(Name: String; AClass: THasherClass);
   end;
@@ -57,6 +59,17 @@ destructor THasherList.Destroy;
 begin
   FList.Free;
   inherited;
+end;
+
+function THasherList.Count: Integer;
+begin
+  Result := FList.Count;
+end;
+
+function THasherList.GetName(Index: Integer): String;
+begin
+  if (Index > FList.Count-1) or (Index < 0) then Result := ''
+  else                                           Result := FList.Keys[Index];
 end;
 
 function THasherList.FindClass(Name: String; out AClass: THasherClass): Boolean;

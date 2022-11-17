@@ -40,9 +40,8 @@ end;
 
 function THasherSUM24.Final: String;
 begin
-  FHash := FHash and $FFFFFF; //TODO: not sure about this
-
-  Result := IntToHex(FHash, 4);
+  FHash := FHash and $FFFFFF;
+  Result := IntToHex(FHash, 6);
 end;
 
 initialization

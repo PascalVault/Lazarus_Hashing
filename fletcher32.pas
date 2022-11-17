@@ -22,7 +22,7 @@ implementation
 constructor THasherFletcher32.Create;
 begin
   inherited Create;
-  Check := '91501DD';
+  Check := '091501DD';
   FHash := 0;
   FHash2 := 0;
 end;
