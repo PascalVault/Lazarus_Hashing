@@ -27,6 +27,15 @@ uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
 
   CRC24_OS9, CRC24_FLEXRAYA, CRC24_FLEXRAYB, CRC24_INTERLAKEN, CRC24_LTEA, CRC24_LTEB, CRC24_OPENPGP,
 
+  crc12_gsm,
+  crc13_bbc,
+  crc14_gsm,
+  crc15_can,
+  crc17_canfd,
+  crc21_canfd,
+  crc30_cdma,
+  crc31_philips,
+
   CRC32_MPEG2, CRC32_JAMCRC,
 
   CRC64, CRC64_ecma, CRC64_go, CRC64_ecma_182, CRC64_xz, CRC64_ms,
