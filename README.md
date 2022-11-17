@@ -1,5 +1,12 @@
 # Checksum & Hashing library for Lazarus
 
+## Available algorithms
+
+Work in progress...
+
+  CRC-16 ARC, CRC-16 CDMA2000
+  CRC-32 MPEG2, CRC-32 JAMCRC
+
 ## Usage example
 
     uses Hasher;
