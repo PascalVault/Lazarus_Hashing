@@ -5,11 +5,16 @@ unit Hasher;
 
 interface
 
-uses SysUtils, Classes, Bufstream, HasherBase,
+uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
+
+  CRC8_AUTOSAR, CRC8_BLUETOOTH, CRC8_CDMA2000, CRC8_DARC, CRC8_DVBS2, CRC8_GSMA,
+  CRC8_GSMB, CRC8_HITAG, CRC8_I4321, CRC8_ICODE, CRC8_LTE, CRC8_MAXIMDOW,
+  CRC8_MIFAREMAD, CRC8_NRSC5, CRC8_OPENSAFETY, CRC8_ROHC, CRC8_SAEJ1850,
+  CRC8_SMBUS, CRC8_TECH3250, CRC8_WCDMA,
 
   Adler8, Adler16, Adler32, Adler64,
   cksum_mpeg2,
-  CRC8_AUTOSAR, CRC8_BLUETOOTH,
+
   CRC16_ARC, CRC16_CDMA2000,
   CRC32_MPEG2, CRC32_JAMCRC,
   CRC64, CRC64_ecma,
@@ -18,9 +23,13 @@ uses SysUtils, Classes, Bufstream, HasherBase,
   XOR8, XOR16, XOR32;
 
 type
+
+ { THasher }
+
  THasher = class
   private
     FAlgo: THasherBase;
+    FClass: THasherClass;
   public
     constructor Create(Algo: String);
     destructor Destroy; override;
@@ -29,6 +38,7 @@ type
     procedure Update(Str: AnsiString); overload;
     procedure Update(Msg: PByte; Length: Integer); overload;
     procedure UpdateFile(Filename: TFilename);
+    function SelfCheck: Boolean;
 end;
 
 implementation
@@ -65,6 +75,23 @@ begin
   end;
 end;
 
+function THasher.SelfCheck: Boolean;
+const Test: array[0..9] of AnsiChar = '123456789';
+var Algo: THasherBase;
+    Res: String;
+begin
+  Result := False;
+  try
+    Algo := FClass.Create;
+    Algo.Update(@Test[0], 9);
+    Res := Algo.Final;
+
+    if Algo.Check = Res then Result := True;
+  finally
+    Algo.Free;
+  end;
+end;
+
 procedure THasher.Update(Msg: PByte; Length: Integer);
 begin
   FAlgo.Update(Msg, Length);
@@ -80,6 +107,7 @@ begin
 
   if not Res then raise exception.create('Invalid algorithm');
 
+  FClass := AClass;
   FAlgo := AClass.Create;
 end;
 
