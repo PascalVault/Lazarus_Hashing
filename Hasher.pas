@@ -25,7 +25,7 @@ uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
 
   CRC32_MPEG2, CRC32_JAMCRC,
 
-  CRC64, CRC64_ecma, CRC64_go, CRC64_ecma_182, CRC64_xz,
+  CRC64, CRC64_ecma, CRC64_go, CRC64_ecma_182, CRC64_xz, CRC64_ms,
 
   Adler8, Adler16, Adler32, Adler64,
   cksum_mpeg2,

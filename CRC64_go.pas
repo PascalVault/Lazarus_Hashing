@@ -1,5 +1,5 @@
 unit CRC64_go;
-//CRC64 ECMA
+//CRC-64 GO
 //Author: domasz
 //Version: 0.1 (2022-11-17)
 //Licence: MIT

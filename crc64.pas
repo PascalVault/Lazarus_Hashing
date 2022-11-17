@@ -1,5 +1,5 @@
 unit CRC64;
-//CRC64 Jones
+//CRC-64 Jones
 //Author: domasz
 //Version: 0.1 (2022-11-17)
 //Licence: MIT

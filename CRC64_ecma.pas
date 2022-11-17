@@ -1,5 +1,5 @@
 unit CRC64_ecma;
-//CRC64 ECMA
+//CRC-64 ECMA
 //Author: domasz
 //Version: 0.1 (2022-11-17)
 //Licence: MIT
