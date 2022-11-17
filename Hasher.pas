@@ -7,6 +7,8 @@ interface
 
 uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
 
+  CRC4_interlaken,
+
   CRC6_DARC, CRC6_G704,
 
   crc7_mmc, crc7_umts,
