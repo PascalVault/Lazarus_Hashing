@@ -7,8 +7,15 @@ interface
 
 uses SysUtils, Classes, Bufstream, HasherBase,
 
+  Adler8, Adler16, Adler32, Adler64,
+  cksum_mpeg2,
+  CRC8_AUTOSAR, CRC8_BLUETOOTH,
   CRC16_ARC, CRC16_CDMA2000,
-  CRC32_MPEG2, CRC32_JAMCRC;
+  CRC32_MPEG2, CRC32_JAMCRC,
+  CRC64, CRC64_ecma,
+  Fletcher8, Fletcher16, Fletcher32, Fletcher64,
+  SUM8, SUM16, SUM24, SUM32, SUM64,
+  XOR8, XOR16, XOR32;
 
 type
  THasher = class
