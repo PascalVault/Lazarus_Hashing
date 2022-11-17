@@ -27,6 +27,7 @@ uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
   CRC64, CRC64_ecma,
   Fletcher8, Fletcher16, Fletcher32, Fletcher64,
   SUM8, SUM16, SUM24, SUM32, SUM64,
+  SIZE64, SUM_BSD, SUM_SYSV,
   XOR8, XOR16, XOR32;
 
 type
