@@ -49,3 +49,20 @@ More soon...
         Memo1.Lines.Add( Hash );
       finally
       end; 
+
+## Using classes directly- without THasher
+
+    uses CRC64;
+    
+    var Hasher: THasherCRC64;
+        Hash: String;
+        Msg: String;
+    begin
+      Msg := '123456789';
+      Hasher := THasherCRC64.Create;
+      Hasher.Update(@Msg[1], Length(Msg));
+      Hash := Hasher.Final;
+      Hasher.Free;
+    
+      Memo1.Lines.Add( Hash );
+    end;
