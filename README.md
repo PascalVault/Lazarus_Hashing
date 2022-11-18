@@ -33,8 +33,8 @@ More soon...
 * SUM8, SUM16, SUM24, SUM32, SUM64,
 * XOR8, XOR16, XOR32
 
-## Usage example
-
+## Usage examples
+hashing a String
     uses Hasher;
   
     var Hasher: THasher;
@@ -50,10 +50,48 @@ More soon...
       finally
       end; 
 
+hashing a Stream
+    uses Hasher;
+  
+    var Hasher: THasher;
+        Hash: String;
+        Msg: TMemoryStream;
+    begin
+      try
+        Msg := TMemoryStream.Create;
+        Hasher := THasher.Create('CRC-32 JAMCRC');
+        Hasher.Update(Msg);
+        Hash := Hasher.Final;
+        Hasher.Free;
+        
+        Memo1.Lines.Add( Hash );
+      finally
+        Msg.Free;
+      end; 
+
+hashing a file    
+
+     uses Hasher;
+
+    var Hasher: THasher;
+        Hash: String;
+    begin
+      try       
+        Hasher := THasher.Create('CRC-32 JAMCRC');
+        Hasher.UpdateFile('directory/file.exe');
+        Hash := Hasher.Final;
+        Hasher.Free;
+        
+        Memo1.Lines.Add( Hash );
+      finally
+      end; 
+      
+
 ## Using classes directly- without THasher
+hashing a String
 
     uses CRC64;
-    
+
     var Hasher: THasherCRC64;
         Hash: String;
         Msg: String;
@@ -61,6 +99,24 @@ More soon...
       Msg := '123456789';
       Hasher := THasherCRC64.Create;
       Hasher.Update(@Msg[1], Length(Msg));
+      Hash := Hasher.Final;
+      Hasher.Free;
+    
+      Memo1.Lines.Add( Hash );
+    end;
+    
+hashing an Array   
+
+    uses CRC64;
+
+    var Hasher: THasherCRC64;
+        Hash: String;
+        Msg: array of Byte;
+        Len: Integer;
+    begin
+      SetLength(Msg, Len);
+      Hasher := THasherCRC64.Create;
+      Hasher.Update(@Msg[0], Len);
       Hash := Hasher.Final;
       Hasher.Free;
     
