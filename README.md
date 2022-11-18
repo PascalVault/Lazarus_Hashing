@@ -35,6 +35,7 @@ More soon...
 
 ## Usage examples
 hashing a String
+
     uses Hasher;
   
     var Hasher: THasher;
@@ -51,6 +52,7 @@ hashing a String
       end; 
 
 hashing a Stream
+
     uses Hasher;
   
     var Hasher: THasher;
@@ -88,6 +90,7 @@ hashing a file
       
 
 ## Using classes directly- without THasher
+
 hashing a String
 
     uses CRC64;
