@@ -26,6 +26,8 @@ shr = >>
 
 not = !
 
+mod = %
+
 ## Function parameters
 
 In every class there is a function like this:
@@ -35,3 +37,8 @@ In every class there is a function like this:
 you can replace "Msg: PByte" in your translation with something like "Msg: String"
 
 and then replace all "Msg^" with "Msg[i]"
+
+
+## PHP port
+
+A PHP port is available in "PHP" subrdirectory- but not all algorithms have been ported yet.
