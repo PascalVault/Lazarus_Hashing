@@ -32,6 +32,8 @@ More soon...
 * SIZE64, Sum BSD, Sum SYSV,
 * SUM8, SUM16, SUM24, SUM32, SUM64,
 * XOR8, XOR16, XOR32
+* xxHash32
+* MurmurHash, MurmurHash2, MurmurHash2a, MurmurHash3
 
 ## Usage examples
 hashing a String
