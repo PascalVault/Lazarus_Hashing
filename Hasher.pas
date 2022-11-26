@@ -1,6 +1,6 @@
 unit Hasher;
 //Author: domasz
-//Version: 0.1 (2022-11-17)
+//Version: 0.2 (2022-11-26)
 //Licence: MIT
 
 interface
@@ -28,6 +28,23 @@ uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
   CRC24_OS9, CRC24_FLEXRAYA, CRC24_FLEXRAYB, CRC24_INTERLAKEN, CRC24_LTEA,
   CRC24_LTEB, CRC24_OPENPGP,
 
+  CRC5_EPCC1G2, CRC5_G704,CRC5_USB, CRC4_G704,CRC3_ROHC, CRC24_BLE,
+
+  PJW32,
+  MurmurHash,
+  MurmurHash2,
+  MurmurHash2a,
+  MurmurHash3,
+  MySQL3,
+  CARP,
+
+  xxHash32,
+  SHA1, SHA0,
+
+
+  CRC16_TMS37157, CRC16_ISOIEC1444, CRC16_RIELLO,
+  CRC14_DARC,
+
   crc10_atm, crc10_gsm, crc10_cdma2000,
   crc11_flexray, crc11_umts,
   crc12_gsm, crc12_dect, crc12_cdma2000,
@@ -41,10 +58,23 @@ uses SysUtils, Classes, Bufstream, HasherBase, Dialogs,
   CRC40_gsm,
   CRC82_darc,
 
+  One_at_a_time,
+
   CRC32_MPEG2, CRC32_JAMCRC, CRC32_AIXM, CRC32_AUTOSAR, CRC32_BASE91D, CRC32_BZIP2,
   CRC32_CDROMEDC, CRC32_CKSUM, CRC32_ISCSI, CRC32_ISOHDLC, CRC32_MEF, CRC32_XFER,
 
   CRC64, CRC64_ecma, CRC64_go, CRC64_ecma_182, CRC64_xz, CRC64_ms,
+
+  FNV0_64, FNV1_64, FNV1A_64,
+  FNV0_32, FNV1_32, FNV1a_32,
+  FNV0_8, FNV0_16, FNV0_24,
+
+  FNV1a_8, FNV1a_16, FNV1_8, FNV1_16,
+  FNV1A_56, FNV0_56, FNV1_56,
+
+  aphash, BKDRHash, DEKHash, DJBHash, elfHash, jshash, pjwhash, rshash, SDBMHash,
+
+  GHash3, GHash5,
 
   Adler8, Adler16, Adler32, Adler64,
   cksum_mpeg2,
@@ -112,8 +142,8 @@ var Algo: THasherBase;
     Res: String;
 begin
   Result := False;
+  Algo := FClass.Create;
   try
-    Algo := FClass.Create;
     Algo.Update(@Test[0], 9);
     Res := Algo.Final;
 
