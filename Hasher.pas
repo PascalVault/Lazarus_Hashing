@@ -111,11 +111,13 @@ begin
   SetLength(Buffer, 4096);
 
   try
-  while Stream.Position < Stream.Size do begin
+  repeat
     Length := Stream.Read(Buffer[0], 4096);
+
+    if Length <=0 then break;
 	
     FAlgo.Update(@Buffer[0], Length);
-  end;
+  until false;
   except
   end;
 end;
