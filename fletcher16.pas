@@ -6,7 +6,7 @@ unit fletcher16;
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 type THasherFletcher16 = class(THasherbase)
   private

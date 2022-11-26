@@ -1,12 +1,12 @@
 unit One_at_a_time;
 //One at a time
 //Author: domasz
-//Last Update: 2022-11-20
+//Last Update: 2022-11-26
 //Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 
 type THasherOneAt = class(THasherbase)

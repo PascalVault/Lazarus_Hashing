@@ -1,12 +1,12 @@
 unit MurmurHash2a;
 //MurmurHash2a
 //Author: domasz
-//Last Update: 2022-11-22
+//Last Update: 2022-11-26
 //Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 type THasherMurmurHash2a = class(THasherbase)
   private

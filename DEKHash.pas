@@ -3,7 +3,7 @@ unit DEKHash;
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 
 type THasherDEKHash = class(THasherbase)

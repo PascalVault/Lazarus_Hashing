@@ -6,7 +6,7 @@ unit XXHash32;
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 type THasherXXHash32 = class(THasherbase)
   private

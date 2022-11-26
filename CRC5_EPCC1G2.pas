@@ -6,7 +6,7 @@ unit CRC5_EPCC1G2;
 
 interface
 
-uses SysUtils, HasherBase, Dialogs, Classes, Controls, StdCtrls;
+uses SysUtils, HasherBase;
 
 type THasherCRC5_EPCC1G2 = class(THasherbase)
   private

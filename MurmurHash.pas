@@ -1,12 +1,12 @@
 unit MurmurHash;
 //MurmurHash
 //Author: domasz
-//Last Update: 2022-11-22
+//Last Update: 2022-11-26
 //Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 type THasherMurmurHash = class(THasherbase)
   private

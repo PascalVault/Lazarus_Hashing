@@ -6,7 +6,7 @@ unit CRC4_interlaken;
 
 interface
 
-uses SysUtils, HasherBase, Dialogs, Classes, Controls, StdCtrls;
+uses SysUtils, HasherBase;
 
 type THasherCRC4_interlaken = class(THasherbase)
   private

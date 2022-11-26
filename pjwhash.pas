@@ -1,9 +1,12 @@
 unit PJWHash;
 //PJWHash (book)
+//Author: domasz
+//Last Update: 2022-11-26
+//Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 
 type THasherPJWHash = class(THasherbase)
