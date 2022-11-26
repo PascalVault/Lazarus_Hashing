@@ -34,6 +34,7 @@ More soon...
 * XOR8, XOR16, XOR32
 * xxHash32
 * MurmurHash, MurmurHash2, MurmurHash2a, MurmurHash3
+* SHA-0, SHA-1, SHA-224, SHA-256
 
 ## Usage examples
 hashing a String
