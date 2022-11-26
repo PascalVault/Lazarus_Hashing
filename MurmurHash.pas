@@ -41,7 +41,7 @@ begin
 
   while Length >= 4 do begin
     //Move(Msg^, Tmp, 4);
-    Tmp2 := PCardinal(Msg)^;
+    Tmp := PCardinal(Msg)^;
 
     FHash := FHash + Tmp;
     FHash := FHash * M;
