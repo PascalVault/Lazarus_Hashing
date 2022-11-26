@@ -40,7 +40,8 @@ begin
   FHash := seed xor (Length * M);
 
   while Length >= 4 do begin
-    Move(Msg^, Tmp, 4);
+    //Move(Msg^, Tmp, 4);
+    Tmp2 := PCardinal(Msg)^;
 
     FHash := FHash + Tmp;
     FHash := FHash * M;

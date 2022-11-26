@@ -52,7 +52,8 @@ begin
   K := 0;
 
   while Length >= 4 do begin
-    Move(Msg^, Tmp2, 4);
+    //Move(Msg^, Tmp2, 4);
+    Tmp2 := PCardinal(Msg)^;
 
     mmix(FHash, Tmp2);
 

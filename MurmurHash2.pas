@@ -41,7 +41,8 @@ begin
   K := 0;
 
   while Length >= 4 do begin
-    Move(Msg^, Tmp[0], 4);
+    //Move(Msg^, Tmp[0], 4);
+    Tmp2 := PCardinal(Msg)^;
 
     K  := Tmp[0];
     K := K or (Tmp[1] shl 8);
