@@ -1,7 +1,7 @@
 unit SHA256;
 //SHA-256 (SHA-2)
 //Author: domasz
-//Last Update: 2022-11-26
+//Last Update: 2022-11-28
 //Licence: MIT
 
 interface
@@ -10,6 +10,7 @@ uses SysUtils, HasherBase;
 
 type THasherSHA256 = class(THasherbase)
   private
+    FTotalSize: Int64;
     FHash: array[0..7] of Cardinal;
   public
     constructor Create; override;
@@ -33,6 +34,7 @@ $748f82ee, $78a5636f, $84c87814, $8cc70208, $90befffa, $a4506ceb, $bef9a3f7, $c6
 constructor THasherSHA256.Create;
 begin
   inherited Create;
+  FTotalSize := 0;
 
   Check := '15E2B0D3C33891EBB0F1EF609EC419420C20E320CE94C65FBC8C3312448EB225';
 
@@ -53,15 +55,17 @@ var i: Integer;
     w: array[0..79] of Cardinal;
     buf: array[0..63] of Byte;
     Left: Integer;
-    Bits: Int64;
+    Bits: QWord;
     s0, s1: Cardinal;
     ch, t1, t2, maj: Cardinal;
 begin
-  i := 0;
+  Inc(FTotalSize, Length);
 
-  while i < Length do begin
+  j := 0;
 
-    if Length - i > 63 then begin
+  while j < Length do begin
+
+    if Length - j > 63 then begin
       Move(Msg^, buf[0], 64);
       Inc(Msg, 64);
     end
@@ -73,7 +77,7 @@ begin
 
       Buf[Left] := $80;
 
-      Bits := Length shl 3;
+      Bits := FTotalSize shl 3;
 
       Buf[56] := bits shr 56;
       buf[57] := bits shr 48;
@@ -85,9 +89,8 @@ begin
       buf[63] := bits;
     end;
 
-    for j:=0 to 15 do begin
-      w[j] := (buf[j*4] shl 24) or (buf[j*4 +1] shl 16) or (buf[j*4 +2] shl 8) or (buf[j*4 +3]);
-    end;
+    Move(buf[0], w[0], 64);
+    for i:=0 to 15 do w[i] := SwapEndian(w[i]);
 
     for  i:=16 to 63 do begin
       s0 := RorDWord(w[i-15], 7) xor  RorDWord(w[i-15], 18) xor  (w[i-15] shr 3);
@@ -135,7 +138,7 @@ begin
     FHash[6] := FHash[6] + g;
     FHash[7] := FHash[7] + h;
 
-    Inc(i, 64);
+    Inc(j, 64);
   end;
 end;
 
