@@ -63,7 +63,7 @@ begin
 
   j := 0;
 
-  while j < Length do begin
+  while j <= Length do begin
 
     if Length - j > 63 then begin
       Move(Msg^, buf[0], 64);

@@ -1,7 +1,7 @@
 unit SHA0;
 //SHA-0
 //Author: domasz
-//Last Update: 2022-11-26
+//Last Update: 2022-11-28
 //Licence: MIT
 
 interface
@@ -48,7 +48,7 @@ begin
 
   i := 0;
 
-  while i < Length do begin
+  while i <= Length do begin
        A := FHash[0];
        B := FHash[1];
        C := FHash[2];

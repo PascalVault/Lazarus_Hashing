@@ -77,7 +77,7 @@ begin
 
   i := 0;
 
-  while i < Length do begin
+  while i <= Length do begin
 
     if Length - i > 127 then begin
       Move(Msg^, buf[0], 128);
