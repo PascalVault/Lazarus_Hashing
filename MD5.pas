@@ -70,8 +70,7 @@ begin
   Inc(FTotalSize, Length);
   i := 0;
 
-  while i < Length do begin
-
+  while i <= Length do begin
        if Length - i > 63 then begin
          Move(Msg^, buf[0], 64);
          Inc(Msg, 64);
