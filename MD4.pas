@@ -1,7 +1,7 @@
 unit MD4;
 //MD-4
 //Author: domasz
-//Last Update: 2022-11-27
+//Last Update: 2022-11-28
 //Licence: MIT  
 
 interface
@@ -10,6 +10,7 @@ uses SysUtils, HasherBase;
 
 type THasherMD4 = class(THasherbase)
   private
+    FTotalSize: Int64;
     Value: array[0..3] of Cardinal;
   public
     constructor Create; override;
@@ -22,6 +23,8 @@ implementation
 constructor THasherMD4.Create;
 begin
   inherited Create;
+  FTotalSize := 0;
+
   Check := '2AE523785D0CAF4D2FB557C12016185C';
 
   value[0] := $67452301;
@@ -39,6 +42,8 @@ var i: Integer;
     Bits: Int64;
     Left: Integer;
 begin
+  Inc(FTotalSize, Length);
+
   j := 0;
 
   while j < Length-1 do begin
@@ -56,7 +61,7 @@ begin
 
       Buf[Left] := $80;
 
-      Bits := Length shl 3;
+      Bits := FTotalSize shl 3;
 
       buf[56] := bits;
       buf[57] := bits shr 8;

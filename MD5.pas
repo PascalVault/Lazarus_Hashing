@@ -1,7 +1,7 @@
 unit MD5;
 //MD-5
 //Author: domasz
-//Last Update: 2022-11-26
+//Last Update: 2022-11-28
 //Licence: MIT
 
 interface
@@ -11,6 +11,7 @@ uses SysUtils, HasherBase;
 type THasherMD5 = class(THasherbase)
   private
     FHash: array[0..3] of Cardinal;
+    FTotalSize: Int64;
   public
     constructor Create; override;
     procedure Update(Msg: PByte; Length: Integer); override;
@@ -47,6 +48,7 @@ S: array[0..63] of Byte = (
 constructor THasherMD5.Create;
 begin
   inherited Create;
+  FTotalSize := 0;
 
   Check := '25F9E794323B453885F5181F1B624D0B';
 
@@ -63,8 +65,9 @@ var i: Integer;
     X: array[0..15] of Cardinal;
     buf: array[0..63] of Byte;
     Left: Integer;
-    Bits: Int64;
+    Bits: QWord;
 begin
+  Inc(FTotalSize, Length);
   i := 0;
 
   while i < Length do begin
@@ -81,7 +84,7 @@ begin
 
         Buf[Left] := $80;
 
- 	Bits := Length shl 3;
+ 	Bits := FTotalSize shl 3;
 
  	buf[56] := bits;
  	buf[57] := bits shr 8;
@@ -91,11 +94,9 @@ begin
  	buf[61] := bits shr 40;
  	buf[62] := bits shr 48;
         Buf[63] := bits shr 56;
-       end;
-
-      for j:=0 to 15 do begin
-        X[j] := (buf[4*j]) or (buf[4*j+1]) shl 8 or (buf[4*j+2]) shl 16 or (buf[4*j+3]) shl 24;
       end;
+
+      Move(buf[0], X[0], 64);
 
       A := FHash[0];
       B := FHash[1];
