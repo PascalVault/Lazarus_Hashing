@@ -1,12 +1,12 @@
 unit MD2;
 //MD-2
 //Author: domasz
-//Last Update: 2022-11-26
+//Last Update: 2022-11-28
 //Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase;
+uses SysUtils, HasherBase, Dialogs;
 
 type THasherMD2 = class(THasherbase)
   private
@@ -48,6 +48,7 @@ constructor THasherMD2.Create;
 var i: Integer;
 begin
   inherited Create;
+
   Check := '12BD4EFDD922B5C8C7B773F26EF4E35F';
 
   for i:= 0 to 15 do begin
@@ -70,9 +71,11 @@ var i,j,k: Integer;
 begin
   i := 0;
 
-  while i < Length-1 do begin
-
-    if Length - i > 15 then begin
+  while i <= Length do begin
+    if i = Length then begin
+      FillChar(Buf, 16, 16);
+    end
+    else if Length - i > 15 then begin
       Move(Msg^, buf[0], 16);
       Inc(Msg, 16);
     end
@@ -82,13 +85,12 @@ begin
       FillChar(Buf, 16, 0);
       Move(Msg^, Buf[0], Size);
       Inc(Msg, Size);
-    end;
 
-    Left := 16 - (length mod 16);
-    if (Left = 0) then Left := 16;
+      Left := 16 - (Length mod 16);
 
-    for j:=0 to Left-1 do begin
-      Buf[Length+j] := Left;
+      for j:=0 to Left-1 do begin
+        Buf[Size+j] := Left;
+      end;
     end;
 
     l := checksum[15];
