@@ -10,6 +10,7 @@ uses SysUtils, HasherBase;
 
 type THasherSHA0 = class(THasherbase)
   private
+    FTotalSize: Int64;
     FHash: array[0..4] of Cardinal;
   public
     constructor Create; override;
@@ -43,6 +44,8 @@ var i: Integer;
     Left: Integer;
     Bits: Int64;
 begin
+  Inc(FTotalSize, Length);
+
   i := 0;
 
   while i < Length do begin
@@ -57,14 +60,14 @@ begin
          Inc(Msg, 64);
        end
        else begin
-         Left := Length mod 64;
+        Left := Length mod 64;
 
-         FillChar(Buf, 64, 0);
-         Move(Msg^, buf[0], Left);
+        FillChar(Buf, 64, 0);
+        Move(Msg^, buf[0], Left);
 
         Buf[Left] := $80;
 
- 	Bits := Length shl 3;
+ 	Bits := FTotalSize shl 3;
 
         Buf[56] := bits shr 56;
  	buf[57] := bits shr 48;
