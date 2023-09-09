@@ -1,7 +1,7 @@
 unit MD4;
 //MD-4
 //Author: domasz
-//Last Update: 2022-11-28
+//Last Update: 2023-09-09
 //Licence: MIT  
 
 interface
@@ -12,6 +12,8 @@ type THasherMD4 = class(THasherbase)
   private
     FTotalSize: Int64;
     Value: array[0..3] of Cardinal;
+    procedure Process(X: array of Cardinal);
+    procedure Last(Msg: PByte; Length: Integer);
   public
     constructor Create; override;
     procedure Update(Msg: PByte; Length: Integer); override;
@@ -35,46 +37,58 @@ end;
 
 procedure THasherMD4.Update(Msg: PByte; Length: Integer);
 var i: Integer;
-    j: Integer;
-    A,B,C,D: Cardinal;
     X: array[0..15] of Cardinal;
-    buf: array[0..63] of Byte;
-    Bits: Int64;
-    Left: Integer;
 begin
   Inc(FTotalSize, Length);
+  i := 0;
 
-  j := 0;
-
-  while j <= Length do begin
-
-    if Length - j > 63 then begin
-      Move(Msg^, buf[0], 64);
+  while i < Length do begin
+    if Length - i > 63 then begin
+      Move(Msg^, X[0], 64);
       Inc(Msg, 64);
+
+      Process(X);
     end
-    else begin
-      Left := Length mod 64;
+    else Last(Msg, Length);
 
-      FillChar(Buf, 64, 0);
-      Move(Msg^, buf[0], Left);
-      Inc(Msg, Left);
+    Inc(i, 64);
+  end;
+end;
 
-      Buf[Left] := $80;
+procedure THasherMD4.Last(Msg: PByte; Length: Integer);
+var buf: array[0..63] of Byte;
+    Left: Integer;
+    Bits: QWord;
+    X: array[0..15] of Cardinal;
+begin
+    Left := Length mod 64;
 
-      Bits := FTotalSize shl 3;
+    FillChar(Buf, 64, 0);
+    Move(Msg^, buf[0], Left);
 
-      buf[56] := bits;
-      buf[57] := bits shr 8;
-      buf[58] := bits shr 16;
-      buf[59] := bits shr 24;
-      buf[60] := bits shr 32;
-      buf[61] := bits shr 40;
-      buf[62] := bits shr 48;
-      Buf[63] := bits shr 56;
-    end;
+    Buf[Left] := $80;
 
+    Bits := FTotalSize shl 3;
+
+    buf[56] := bits;
+    buf[57] := bits shr 8;
+    buf[58] := bits shr 16;
+    buf[59] := bits shr 24;
+    buf[60] := bits shr 32;
+    buf[61] := bits shr 40;
+    buf[62] := bits shr 48;
+    Buf[63] := bits shr 56;
+
+    Move(buf[0], X[0], 64);
+    Process(X);
+end;
+
+procedure THasherMD4.Process(X: array of Cardinal);
+var i: Integer;
+    A,B,C,D: Cardinal;
+begin
     for i:=0 to 15 do begin
-      X[i] := (buf[i*4]) or (buf[i*4 +1]) shl 8 or (buf[i*4 +2]) shl 16 or (buf[i*4 +3]) shl 24;
+    //  X[i] := (buf[i*4]) or (buf[i*4 +1]) shl 8 or (buf[i*4 +2]) shl 16 or (buf[i*4 +3]) shl 24;
     end;
 
     A := value[0];
@@ -185,13 +199,16 @@ begin
     value[1] := value[1] + B;
     value[2] := value[2] + C;
     value[3] := value[3] + D;
-
-    Inc(j, 64);
-  end;
 end;
 
 function THasherMD4.Final: String;
+var Msg: array[0..63] of Byte;
 begin
+  if FTotalSize mod 64 = 0 then begin
+    FillChar(Msg, 64, 0);
+    Last(@Msg[0], 64);
+  end;
+
   Value[0] := SwapEndian(Value[0]);
   Value[1] := SwapEndian(Value[1]);
   Value[2] := SwapEndian(Value[2]);

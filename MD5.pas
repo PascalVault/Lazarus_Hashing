@@ -1,7 +1,7 @@
 unit MD5;
 //MD-5
 //Author: domasz
-//Last Update: 2022-11-28
+//Last Update: 2023-09-09
 //Licence: MIT
 
 interface
@@ -12,6 +12,8 @@ type THasherMD5 = class(THasherbase)
   private
     FHash: array[0..3] of Cardinal;
     FTotalSize: Int64;
+    procedure Process(X: array of Cardinal);
+    procedure Last(Msg: PByte; Length: Integer);
   public
     constructor Create; override;
     procedure Update(Msg: PByte; Length: Integer); override;
@@ -60,86 +62,101 @@ end;
 
 procedure THasherMD5.Update(Msg: PByte; Length: Integer);
 var i: Integer;
-    j: Integer;
-    A,B,C,D,F,G: Cardinal;
     X: array[0..15] of Cardinal;
-    buf: array[0..63] of Byte;
-    Left: Integer;
-    Bits: QWord;
 begin
   Inc(FTotalSize, Length);
   i := 0;
 
-  while i <= Length do begin
-       if Length - i > 63 then begin
-         Move(Msg^, buf[0], 64);
-         Inc(Msg, 64);
-       end
-       else begin
-         Left := Length mod 64;
+  while i < Length do begin
+    if Length - i > 63 then begin
+      Move(Msg^, X[0], 64);
+      Inc(Msg, 64);
 
-         FillChar(Buf, 64, 0);
-         Move(Msg^, buf[0], Left);
+      Process(X);
+    end
+    else Last(Msg, Length);
 
-        Buf[Left] := $80;
-
- 	Bits := FTotalSize shl 3;
-
- 	buf[56] := bits;
- 	buf[57] := bits shr 8;
- 	buf[58] := bits shr 16;
- 	buf[59] := bits shr 24;
- 	buf[60] := bits shr 32;
- 	buf[61] := bits shr 40;
- 	buf[62] := bits shr 48;
-        Buf[63] := bits shr 56;
-      end;
-
-      Move(buf[0], X[0], 64);
-
-      A := FHash[0];
-      B := FHash[1];
-      C := FHash[2];
-      D := FHash[3];
-
-      for j:=0 to 63 do begin
-
-        if j <= 15 then begin
-            F := (B and C) or ((not B) and D);
-            g := j;
-        end
-        else if j <= 31 then begin
-            F := (D and B) or ((not D) and C);
-            g := (5*j + 1) mod 16;
-        end
-        else if j <= 47 then begin
-            F := B xor C xor D;
-            g := (3*j + 5) mod 16;
-        end
-        else if j <= 63 then begin
-            F := C xor (B or (not D));
-            g := (7*j) mod 16;
-        end;
-
-        F := F + A + K[j] + X[g];
-        A := D;
-        D := C;
-        C := B;
-        B := B + RolDWord(F, s[j]);
-      end;
-
-
-      FHash[0] := FHash[0] + A;
-      FHash[1] := FHash[1] + B;
-      FHash[2] := FHash[2] + C;
-      FHash[3] := FHash[3] + D;
-
-      Inc(i, 64);
+    Inc(i, 64);
   end;
 end;
 
-function THasherMD5.Final: String;
+procedure THasherMD5.Last(Msg: PByte; Length: Integer);
+var buf: array[0..63] of Byte;
+    Left: Integer;
+    Bits: QWord;
+    X: array[0..15] of Cardinal;
 begin
+  Left := Length mod 64;
+
+  FillChar(Buf, 64, 0);
+  Move(Msg^, buf[0], Left);
+
+  Buf[Left] := $80;
+
+  Bits := FTotalSize shl 3;
+
+  buf[56] := bits;
+  buf[57] := bits shr 8;
+  buf[58] := bits shr 16;
+  buf[59] := bits shr 24;
+  buf[60] := bits shr 32;
+  buf[61] := bits shr 40;
+  buf[62] := bits shr 48;
+  Buf[63] := bits shr 56;
+
+  Move(buf[0], X[0], 64);
+  Process(X);
+end;
+
+procedure THasherMD5.Process(X: array of Cardinal);
+var j: Integer;
+    A,B,C,D,F,G: Cardinal;
+begin
+  A := FHash[0];
+  B := FHash[1];
+  C := FHash[2];
+  D := FHash[3];
+
+  for j:=0 to 63 do begin
+
+    if j <= 15 then begin
+        F := (B and C) or ((not B) and D);
+        g := j;
+    end
+    else if j <= 31 then begin
+        F := (D and B) or ((not D) and C);
+        g := (5*j + 1) mod 16;
+    end
+    else if j <= 47 then begin
+        F := B xor C xor D;
+        g := (3*j + 5) mod 16;
+    end
+    else if j <= 63 then begin
+        F := C xor (B or (not D));
+        g := (7*j) mod 16;
+    end;
+
+    F := F + A + K[j] + X[g];
+    A := D;
+    D := C;
+    C := B;
+    B := B + RolDWord(F, s[j]);
+  end;
+
+  FHash[0] := FHash[0] + A;
+  FHash[1] := FHash[1] + B;
+  FHash[2] := FHash[2] + C;
+  FHash[3] := FHash[3] + D;
+end;
+
+function THasherMD5.Final: String;
+var Msg: array[0..63] of Byte;
+begin
+  if FTotalSize mod 64 = 0 then begin
+    FillChar(Msg, 64, 0);
+    Last(@Msg[0], 64);
+  end;
+
   FHash[0] := SwapEndian(FHash[0]);
   FHash[1] := SwapEndian(FHash[1]);
   FHash[2] := SwapEndian(FHash[2]);

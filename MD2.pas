@@ -1,17 +1,20 @@
 unit MD2;
 //MD-2
 //Author: domasz
-//Last Update: 2022-11-28
+//Last Update: 2023-09-09
 //Licence: MIT
 
 interface
 
-uses SysUtils, HasherBase, Dialogs;
+uses SysUtils, HasherBase;
 
 type THasherMD2 = class(THasherbase)
   private
+    FTotalSize: Int64;
     checksum: array[0..15] of Byte;
     work: array[0..47] of Byte;
+    procedure Process(buf: array of Byte);
+    procedure Last(Msg: PByte; Length: Integer);
   public
     constructor Create; override;
     procedure Update(Msg: PByte; Length: Integer); override;
@@ -61,59 +64,70 @@ begin
 end;
 
 procedure THasherMD2.Update(Msg: PByte; Length: Integer);
-var i,j,k: Integer;
-    T: Byte;
-    l: Byte;
-    b: Byte;
+var i: Integer;
+    buf: array[0..15] of Byte;
+begin
+  Inc(FTotalSize, Length);
+  i := 0;
+
+  while i < Length do begin
+    if Length - i > 15 then begin
+      Move(Msg^, buf[0], 16);
+      Inc(Msg, 16);
+
+      Process(buf);
+    end
+    else Last(Msg, Length);
+
+    Inc(i, 16);
+  end;
+end;
+
+procedure THasherMD2.Last(Msg: PByte; Length: Integer);
+var j: Integer;
     buf: array[0..15] of Byte;
     Left: Integer;
     Size: Integer;
 begin
-  i := 0;
+  Size := Length mod 16;
 
-  while i <= Length do begin
-    if i = Length then begin
-      FillChar(Buf, 16, 16);
-    end
-    else if Length - i > 15 then begin
-      Move(Msg^, buf[0], 16);
-      Inc(Msg, 16);
-    end
-    else begin
-      Size := Length mod 16;
+  FillChar(Buf, 16, 0);
+  Move(Msg^, Buf[0], Size);
+  Inc(Msg, Size);
 
-      FillChar(Buf, 16, 0);
-      Move(Msg^, Buf[0], Size);
-      Inc(Msg, Size);
+  Left := 16 - (Length mod 16);
 
-      Left := 16 - (Length mod 16);
+  for j:=0 to Left-1 do begin
+    Buf[Size+j] := Left;
+  end;
 
-      for j:=0 to Left-1 do begin
-        Buf[Size+j] := Left;
-      end;
+  Process(Buf);
+end;
+
+procedure THasherMD2.Process(buf: array of Byte);
+var j,k: Integer;
+    T: Byte;
+    l: Byte;
+    b: Byte;
+begin
+  l := checksum[15];
+  for k:=0 to 15 do begin
+    b := buf[k];
+
+    work[16 + k] := b;
+    work[(16 shl 1) + k] := (work[k] xor b);
+    l := (checksum[k] xor SBOX[(b xor l) and $FF]);
+    checksum[k] := l;
+  end;
+
+  t := 0;
+  for k:=0 to 17 do begin
+    for j:=0 to 47 do begin
+      t := (work[j] xor SBOX[t]);
+      work[j] := t;
     end;
 
-    l := checksum[15];
-    for k:=0 to 15 do begin
-      b := buf[k];
-
-      work[16 + k] := b;
-      work[(16 shl 1) + k] := (work[k] xor b);
-      l := (checksum[k] xor SBOX[(b xor l) and $FF]);
-      checksum[k] := l;
-    end;
-
-    t := 0;
-    for k:=0 to 17 do begin
-      for j:=0 to 47 do begin
-        t := (work[j] xor SBOX[t]); 
-        work[j] := t;
-      end;
-
-     t := (t + k);
-    end;
-
-    Inc(i, 16);
+   t := (t + k);
   end;
 end;
 
@@ -122,7 +136,12 @@ var Res: array[0..15] of Byte;
     t: Byte;
     i,j: Integer;
     b: Byte;
+    Msg: array[0..15] of Byte;
 begin
+  if FTotalSize mod 16 = 0 then begin
+    FillChar(Msg, 16, 16);
+    Last(@Msg[0], 16);
+  end;
 
   for i:=0 to 15 do begin
     b := checksum[i];
