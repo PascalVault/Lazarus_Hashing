@@ -36,6 +36,9 @@ More soon...
 * MurmurHash, MurmurHash2, MurmurHash2a, MurmurHash3
 * SHA-0, SHA-1, SHA-224, SHA-256
 
+## PHP port available ##
+https://github.com/PascalVault/PHP_Hashing
+
 ## Usage examples
 hashing a String
 
